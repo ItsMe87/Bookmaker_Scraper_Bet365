@@ -20,9 +20,9 @@ import EigeneExceptions as eex
 
 # Verbesserungen:
 
+# Wait für Ausklappen von Menüs(Javascript) ?? Einfach sleep()? -> Außerdem erstmal alle ausklappfunktionen mit sleep(1) versehen
 # Durch Multithreading verschnellern
 # Headless Browser
-# Warten auf Seite geladen einbauen
 
 
 
@@ -138,59 +138,64 @@ class Bet365Automation:
 ##    # 3. Elemente 'MarketGroup' holen -> MarketGroup[0] = 'Endergebnisse'
 ##        if self.error is False:
 ##            try:
-##                sleep(5)
-##                self.driver.find_element_by_xpath('//div[@class="sm-MarketGroup "]') # Um in die Exception zu springen, weil .find_elements_by_xpath(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
+##                #self.driver.find_element_by_xpath('//div[@class="sm-MarketGroup "]') # Um in die Exception zu springen, weil .find_elements_by_xpath(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
 ##                marketGroups = self.driver.find_elements_by_xpath('//div[@class="sm-MarketGroup "]')
+##                assert len(marketGroups) != 0 # Test, ob marketGroups gefunden wurden
 ##
 ##                # Element MarketGroup[0] = 'Endergebnisse' wird falls notwendig aufgeklappt
 ##                try:
-##                    if marketGroups[0].find_element_by_class_name('sm-MarketGroup_HeaderClosed '): marketGroups[0].click()
+##                    if marketGroups[0].find_element_by_class_name('sm-MarketGroup_HeaderClosed '):
+##                        marketGroups[0].click()
+##                        sleep(1)
 ##                except Exception:
 ##                    pass
 ##                
 ##            except Exception as e:
 ##                self.error = True
-##                self.logger.error('Funktion "get_Endergebnisse": MarketGroup Elemente nicht gefunden!')
 ##                self.logger.error(e)
+##                self.logger.error(traceback.format_exc())
 ##            
 ##        if self.error is False:
 ##    # 4. Ländergruppen holen 
 ##            try:
-##                sleep(1)
-##                marketGroups[0].find_element_by_class_name('sm-Market ') # Um in die Exception zu springen, weil .find_elements_by_class_name(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
+##                #marketGroups[0].find_element_by_class_name('sm-Market ') # Um in die Exception zu springen, weil .find_elements_by_class_name(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
 ##                countries = marketGroups[0].find_elements_by_class_name('sm-Market ')
+##                assert len(countries) != 0 # Test, ob countries gefunden wurden
+##                
 ##            except Exception as e:
 ##                self.error = True
-##                self.logger.error('Funktion "get_Endergebnisse": Countrie Elemente nicht gefunden!')
 ##                self.logger.error(e)
+##                self.logger.error(traceback.format_exc())
 ##                
 ##    # 5. Iteration über Ländergruppen
 ##            if self.error is False:
-##                    for index_countries in range(len(countries)):
+##                    for index_countries in range(4, 5):
 ##                        if index_countries > 0:
 ##
 ##                            # Elemente 'MarketGroup' holen -> MarketGroup[0] = 'Endergebnisse' (Muss pro Iteration wiederholt werden, weil immer von der letzten Liga zurückgesprungen wird)
 ##                            if self.error is False:
 ##                                try:
-##                                    sleep(3)
-##                                    self.driver.find_element_by_xpath('//div[@class="sm-MarketGroup "]') # Um in die Exception zu springen, weil .find_elements_by_xpath(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
+##                                    #self.driver.find_element_by_xpath('//div[@class="sm-MarketGroup "]') # Um in die Exception zu springen, weil .find_elements_by_xpath(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
 ##                                    marketGroups = self.driver.find_elements_by_xpath('//div[@class="sm-MarketGroup "]')
+##                                    assert len(marketGroups) != 0 # Test, ob marketGroups gefunden wurden
 ##
 ##                                    # Element MarketGroup[0] = 'Endergebnisse' wird falls notwendig aufgeklappt
 ##                                    try:
-##                                        if marketGroups[0].find_element_by_class_name('sm-MarketGroup_HeaderClosed '): marketGroups[0].click()
+##                                        if marketGroups[0].find_element_by_class_name('sm-MarketGroup_HeaderClosed '):
+##                                            marketGroups[0].click()
+##                                            sleep(1)
 ##                                    except Exception:
 ##                                        pass
 ##                                    
 ##                                except Exception as e:
 ##                                    self.error = True
-##                                    self.logger.error('Funktion "get_Endergebnisse" [In Schleife (2.Aufruf)]: MarketGroup Elemente nicht gefunden!')
 ##                                    self.logger.error(e)
+##                                    self.logger.error(traceback.format_exc())
+##                        
 ##
 ##                            # Ländergruppe unter 'Ergebnisse' holen
 ##                            if self.error is False:
 ##                                try:
-##                                    sleep(1)
 ##                                    marketGroups[0].find_element_by_class_name('sm-Market ')# Um in die Exception zu springen, weil .find_elements_by_class_name(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
 ##                                    element_country = marketGroups[0].find_elements_by_class_name('sm-Market ')[index_countries]
 ##                                    countrytext = element_country.find_element_by_class_name('sm-Market_GroupName ').text
@@ -201,29 +206,34 @@ class Bet365Automation:
 ##                                        element_country_headerclosed = element_country.find_element_by_xpath('.//div[@class="sm-Market_HeaderClosed "]')
 ##                                        element_country_headerclosed.click()
 ##                                        sleep(1)
+##                    
 ##                                    except Exception:
 ##                                        pass
 ##                        
 ##                                except Exception as e:
 ##                                    self.error = True
-##                                    self.logger.error('Funktion "get_Endergebnisse" [In Schleife (2.Aufruf)]: Countrie Elemente nicht gefunden!')
 ##                                    self.logger.error(e)
+##                                    self.logger.error(traceback.format_exc())
 ##                                    
+##                                
 ##    # 6. Liste der Ligen innerhalb jeweiliger Ländergruppe holen
 ##                            if self.error is False:
 ##                                try:
-##                                    sleep(1)
-##                                    element_country.find_element_by_xpath('.//div[@class="sm-CouponLink sm-CouponLinkSelectable "]') # Um in die Exception zu springen, weil .find_elements_by_xpath(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
+##                                    #element_country.find_element_by_xpath('.//div[@class="sm-CouponLink sm-CouponLinkSelectable "]') # Um in die Exception zu springen, weil .find_elements_by_xpath(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
 ##                                    ligalist = element_country.find_elements_by_xpath('.//div[@class="sm-CouponLink sm-CouponLinkSelectable "]')
-##                                except Exception as e:
-##                                    self.error = True
-##                                    self.logger.error('Funktion "get_Endergebnisse": Keine Ligaelemente unter {} gefunden!'.format(element_country.find_element_by_xpath('.//div[@class="sm-Market_GroupName "]').text.encode('utf-8').decode('ascii', "ignore")))
-##                                    self.logger.error(e)
+##                                    assert len(ligalist) != 0
 ##                                    
+##                                except Exception as e:
+##                                    self.error = True                                    
+##                                    self.logger.error(e)
+##                                    self.logger.error(traceback.format_exc())
+##                                                
 ##    # 7. Iteration über Liste der Ligen
 ##                            if self.error is False:
 ##                                # Durch jede Liga im jeweiligen Land wird iteriert
-##                                for index_liga in range(len(ligalist)):
+##                                for liga in ligalist:
+##                                    print liga.text
+##                                for index_liga in range(6):
 ##                                #for index_liga in range(2,3): 
 ##                                    # MarketGroup 'Endergebnisse' wird falls notwendig wieder aufgeklappt
 ##                                    # Ländergruppen unter 'Endergebnisse' werden aufgeklappt
@@ -232,14 +242,14 @@ class Bet365Automation:
 ##    # 8. Aller vorigen Elemente wieder erfassen (MarketGroup[0], Ländergruppe, Liga ... Indexe Ländergruppe und Liga werden übergeben); 9. Klick auf Liga; 10. Begegnungen pro Liga scrapen; 11. Return von Ligaseite mit Partien
 ##                                    self.openMarketGroup(index_countries, index_liga)
 ##
-##                            #if index_countries == 7: break      
-
-
-
+##                            #if index_countries == 1: break      
+##
+##
+##
     def navigate_to_football(self):
     # 2. Klick zur Fussballseite
         try:
-            football_button = self.driver.find_element_by_xpath('//div[@class="wn-WebNavModule "]//div[contains(text(), "E-Sports")]/following-sibling::*')
+            football_button = self.driver.find_element_by_xpath('//div[@class="wn-WebNavModule "]//div[contains(text(), "Fu") and contains(text(), "ball")]')
             football_button.click()
         except Exception as e:
             self.error = True
@@ -255,26 +265,26 @@ class Bet365Automation:
         if self.error is False:
             # Elemente 'MarketGroup' holen -> MarketGroup[0] = 'Endergebnisse'
             try:
-                sleep(5)
-                self.driver.find_elements_by_xpath('//div[@class="sm-MarketGroup "]') # Um in die Exception zu springen, weil .find_elements_by_class_name(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
+                #self.driver.find_elements_by_xpath('//div[@class="sm-MarketGroup "]') # Um in die Exception zu springen, weil .find_elements_by_class_name(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
                 marketGroups = self.driver.find_elements_by_xpath('//div[@class="sm-MarketGroup "]')
+                assert len(marketGroups) != 0
 
                 # MarketGroup 'Endergebnisse' wird falls notwendig wieder aufgeklappt
                 try:
-                    if marketGroups[0].find_element_by_class_name('sm-MarketGroup_HeaderClosed '): marketGroups[0].click()
-                    sleep(1)
+                    if marketGroups[0].find_element_by_class_name('sm-MarketGroup_HeaderClosed '):
+                        marketGroups[0].click()
+                        sleep(1)
                 except Exception:
                     pass
                 
             except Exception as e:
                     self.error = True
-                    self.logger.error('Funktion "openMarketGroup": MarketGroup Elemente nicht gefunden!')
                     self.logger.error(e)
+                    self.logger.error(traceback.format_exc())
 
         # Ländergruppe unter 'Ergebnisse' holen
         if self.error is False:
             try:
-                sleep(1)
                 marketGroups[0].find_element_by_class_name('sm-Market ')# Um in die Exception zu springen, weil .find_elements_by_class_name(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
                 element_country = marketGroups[0].find_elements_by_class_name('sm-Market ')[index_countries]
                 countrytext = element_country.find_element_by_class_name('sm-Market_GroupName ').text
@@ -289,40 +299,41 @@ class Bet365Automation:
                 
             except Exception as e:
                 self.error = True
-                self.logger.error('Funktion "openMarketGroup": Countrie Elemente nicht gefunden!')
                 self.logger.error(e)
+                self.logger.error(traceback.format_exc())
 
         # Liste der Liga innerhalb jeweiliger Ländergruppe holen
         if self.error is False:           
             try:
-                sleep(1)
-                element_country.find_element_by_xpath('.//div[@class="sm-CouponLink sm-CouponLinkSelectable "]') # Um in die Exception zu springen, weil .find_elements_by_xpath(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
+                #element_country.find_element_by_xpath('.//div[@class="sm-CouponLink sm-CouponLinkSelectable "]') # Um implicitly_wait zu aktivieren # Um in die Exception zu springen, weil .find_elements_by_xpath(...) eine leere Liste bei nicht vorhandenen Elementen zurückgibt, wodurch die Fehleroutine nicht ausgelöst wird
                 ligalist = element_country.find_elements_by_xpath('.//div[@class="sm-CouponLink sm-CouponLinkSelectable "]')
+                assert len(ligalist) != 0
+                
             except Exception as e:
-                self.error = True
-                self.logger.error('Funktion "openMarketGroup": Keine Ligaelemente unter {} gefunden!'.format(element_country.find_element_by_xpath('.//div[@class="sm-Market_GroupName "]').text.encode('utf-8').decode('ascii', "ignore")))
+                self.error = True                
                 self.logger.error(e)
-        
+                self.logger.error(traceback.format_exc())
+# Hier weiter        
         # Liga holen
         if self.error is False:
             liga = ligalist[index_liga]
             ligatext = liga.text
             self.logger.info("{} von {} scrapen: {}".format(index_liga, len(ligalist)-1, ligatext.encode('utf-8').decode('ascii', "ignore")))
     # 9. Klick auf Liga
-            liga.click()
-            sleep(4)
+            liga.click()           
     # 10. Begegnungen pro Liga scrapen
             self.scrapeLigaOdds(ligatext, countrytext)
     # 11. Return von Ligaseite mit Partien
         if self.error is False:
             try:
+                sleep(1)
                 self.driver.find_element_by_class_name('cl-BreadcrumbTrail_BackButton ').click()
+                sleep(1)
             except Exception as e:
-                self.error = True
-                self.logger.error('Funktion "openMarketGroup": Klick zurück in {} hat nicht funktioniert!'.format(ligatext.encode('utf-8').decode('ascii', "ignore")))
+                self.error = True            
                 self.logger.error(e)
+                self.logger.error(traceback.format_exc())
         if self.error is False:
-            sleep(3)
             self.logger.info("Scraping Done.")
             
                 
@@ -332,6 +343,7 @@ class Bet365Automation:
     def scrapeLigaOdds(self, ligatext, countrytext):
 
         if self.error is False:
+            self.driver.find_element_by_class_name('gl-ParticipantOddsOnly_Odds') # Gewährleistet, dass die Seite geladen ist (in Kombination mit implicitly_wait) -> Das Element gibt es nicht auf der vorigen Seite
             soup = BeautifulSoup(self.driver.page_source, 'lxml')
             self.logger.info("Soup geholt!")
 
